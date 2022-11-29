@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { IUser } from "interfaces";
-import { regexForEmail } from "constant";
+import { IUser } from '../interfaces';
+import { regexForEmail } from "../constant";
 
 const userSchema = new mongoose.Schema<IUser>(
   {
@@ -40,13 +40,7 @@ const userSchema = new mongoose.Schema<IUser>(
     steam: {
       type: String,
     },
-    tokens: [
-      {
-        kind: { type: String },
-        accessToken: { type: String },
-        tokenSecret: { type: String },
-      },
-    ],
+    tokens: [String],
     fullname: { type: String },
     gender: { type: String },
     geolocation: { type: String },
@@ -70,6 +64,14 @@ const userSchema = new mongoose.Schema<IUser>(
         ref: "friends",
       },
     ],
+    roles: {
+      User: {
+          type: Number,
+          default: 2001
+      },
+      Editor: Number,
+      Admin: Number
+  },
   },
   { timestamps: true }
 );

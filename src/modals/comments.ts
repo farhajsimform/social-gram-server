@@ -1,4 +1,4 @@
-import { IComments } from 'interfaces';
+import { IComments } from '../interfaces';
 import mongoose from 'mongoose';
 const commentSchema = new mongoose.Schema<IComments>(
   {

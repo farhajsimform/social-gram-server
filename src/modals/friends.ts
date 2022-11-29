@@ -1,4 +1,4 @@
-import { IFriends } from "interfaces";
+import { IFriends } from '../interfaces';
 import mongoose from "mongoose";
 const friendsSchema = new mongoose.Schema<IFriends>(
   {

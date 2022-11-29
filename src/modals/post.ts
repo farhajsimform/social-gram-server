@@ -1,4 +1,4 @@
-import { IPost } from "interfaces";
+import { IPost } from '../interfaces';
 import mongoose from "mongoose";
 const postSchema = new mongoose.Schema<IPost>(
   {
