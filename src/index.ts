@@ -2,17 +2,25 @@ import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser';
+import http from 'http';
 import { connectDB, corsOptions } from "./config";
 import { logger } from "./middleware/logEvents";
 import { credentials } from "./middleware/credentials";
-import authRoutes, {} from './routes/auth'
+import authRoutes from './routes/auth';
 import { verifyJWT } from "./middleware/verifyJWT";
+import { SocketConnection } from "./socket/socket";
+const socketio  = require("socket.io");
+
 
 dotenv.config();
 
 const app: Express = express();
 const PORT = process.env.PORT;
+const server = http.createServer(app);
+const io : any = socketio(server);
+//scoket connection
+SocketConnection(io)
 
 // Database connection
 connectDB();
@@ -45,5 +53,5 @@ app.use(verifyJWT as any);
 
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });

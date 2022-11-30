@@ -5,14 +5,13 @@ import userModel from "../modals/user";
 
 export const handleLogin = async (req: Request, res: Response) => {
   const cookies = req.cookies;
-  console.log(`cookie available at login: ${JSON.stringify(cookies)}`);
   const { email, pwd } = req.body;
   if (!email || !pwd)
     return res
       .status(400)
       .json({ message: "Username and password are required." });
 
-  const foundUser = await userModel.findOne({ username: email }).exec();
+  const foundUser = await userModel.findOne({ email }).exec();
   if (!foundUser) return res.sendStatus(401); //Unauthorized
   // evaluate password
   const match = await bcrypt.compare(pwd, foundUser.password);
@@ -45,7 +44,6 @@ export const handleLogin = async (req: Request, res: Response) => {
 
       // Detected refresh token reuse!
       if (!foundToken) {
-        console.log("attempted refresh token reuse at login!");
         // clear out ALL previous refresh tokens
         newRefreshTokenArray = [];
       }
@@ -59,9 +57,7 @@ export const handleLogin = async (req: Request, res: Response) => {
 
     // Saving refreshToken with current user
     foundUser.tokens = [...newRefreshTokenArray, newRefreshToken];
-    const result = await userModel.updateOne({ _id: foundUser._id }, foundUser);
-    console.log(result);
-    console.log(roles);
+    await userModel.updateOne({ _id: foundUser._id }, foundUser);
 
     // Creates Secure Cookie with refresh token
     res.cookie("jwt", newRefreshToken, {
@@ -94,12 +90,10 @@ export const handleNewUser = async (req: Request, res: Response) => {
     const hashedPwd = await bcrypt.hash(pwd, 10);
 
     //create and store the new user
-    const result = await userModel.create({
+   await userModel.create({
       email: email,
       password: hashedPwd,
     });
-
-    console.log(result);
 
     res.status(201).json({ success: `New user ${email} created!` });
   } catch (err: any) {

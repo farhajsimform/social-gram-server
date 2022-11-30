@@ -8,14 +8,21 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const http_1 = __importDefault(require("http"));
 const config_1 = require("./config");
 const logEvents_1 = require("./middleware/logEvents");
 const credentials_1 = require("./middleware/credentials");
 const auth_1 = __importDefault(require("./routes/auth"));
 const verifyJWT_1 = require("./middleware/verifyJWT");
+const socket_1 = require("./socket/socket");
+const socketio = require("socket.io");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT;
+const server = http_1.default.createServer(app);
+const io = socketio(server);
+//scoket connection
+(0, socket_1.SocketConnection)(io);
 // Database connection
 (0, config_1.connectDB)();
 // custom middleware logger
@@ -38,5 +45,5 @@ app.use('/auth', (0, auth_1.default)());
 app.use(verifyJWT_1.verifyJWT);
 mongoose_1.default.connection.once("open", () => {
     console.log("Connected to MongoDB");
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });
