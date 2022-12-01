@@ -10,6 +10,9 @@ import { credentials } from "./middleware/credentials";
 import authRoutes from './routes/auth';
 import { verifyJWT } from "./middleware/verifyJWT";
 import { SocketConnection } from "./socket/socket";
+import { errorHandler } from "./middleware/errorHandler";
+import postRoutes from "./routes/post";
+import path from "path";
 const socketio  = require("socket.io");
 
 
@@ -44,13 +47,15 @@ app.use(express.urlencoded({ extended: false }));
 // built-in middleware for json
 app.use(express.json());
 
+
 app.get("/", (_: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
-
+app.use("/public", express.static(path.join(__dirname, '../public')));
 app.use('/auth', authRoutes());
 app.use(verifyJWT as any);
-
+app.use('/user-post', postRoutes());
+app.use(errorHandler);
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");
   server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

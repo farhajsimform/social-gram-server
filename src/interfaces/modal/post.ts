@@ -12,4 +12,9 @@ export interface IPost {
   content: string;
   images: Array<string>;
   hashtags: Array<string>;
+  likesCount: number;
+  coolCount: number;
+  funnyCount: number;
+  wowCount: number;
+  angryCount: number;
 }

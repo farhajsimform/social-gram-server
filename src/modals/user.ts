@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IUser } from '../interfaces';
+import { IUser } from "../interfaces";
 import { regexForEmail } from "../constant";
 
 const userSchema = new mongoose.Schema<IUser>(
@@ -66,12 +66,18 @@ const userSchema = new mongoose.Schema<IUser>(
     ],
     roles: {
       User: {
-          type: Number,
-          default: 2001
+        type: Number,
+        default: 2001,
       },
       Editor: Number,
-      Admin: Number
-  },
+      Admin: Number,
+    },
+    posts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "posts",
+      },
+    ],
   },
   { timestamps: true }
 );

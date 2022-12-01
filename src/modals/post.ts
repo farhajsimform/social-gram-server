@@ -1,4 +1,4 @@
-import { IPost } from '../interfaces';
+import { IPost } from "../interfaces";
 import mongoose from "mongoose";
 const postSchema = new mongoose.Schema<IPost>(
   {
@@ -61,6 +61,21 @@ const postSchema = new mongoose.Schema<IPost>(
         type: String,
       },
     ],
+    likesCount: {
+      type: Number,
+    },
+    coolCount: {
+      type: Number,
+    },
+    funnyCount: {
+      type: Number,
+    },
+    wowCount: {
+      type: Number,
+    },
+    angryCount: {
+      type: Number,
+    },
   },
   {
     timestamps: true,

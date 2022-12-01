@@ -21,15 +21,16 @@ export const handleLogin = async (req: Request, res: Response) => {
     const accessToken = jwt.sign(
       {
         UserInfo: {
-          username: foundUser.email,
+          email: foundUser.email,
           roles: roles,
+          id: foundUser._id
         },
       },
       String(process.env.ACCESS_TOKEN_SECRET),
       { expiresIn: "2d" }
     );
     const newRefreshToken = jwt.sign(
-      { email: foundUser.email },
+      { email: foundUser.email, id: foundUser._id },
       String(process.env.REFRESH_TOKEN_SECRET),
       { expiresIn: "10d" }
     );
@@ -75,7 +76,7 @@ export const handleLogin = async (req: Request, res: Response) => {
 };
 
 export const handleNewUser = async (req: Request, res: Response) => {
-  const { email, pwd } = req.body;
+  const { email, pwd, fullname } = req.body;
   if (!email || !pwd)
     return res
       .status(400)
@@ -93,6 +94,7 @@ export const handleNewUser = async (req: Request, res: Response) => {
    await userModel.create({
       email: email,
       password: hashedPwd,
+      fullname
     });
 
     res.status(201).json({ success: `New user ${email} created!` });
