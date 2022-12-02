@@ -54,7 +54,7 @@ app.get("/", (_: Request, res: Response) => {
 app.use("/public", express.static(path.join(__dirname, '../public')));
 app.use('/auth', authRoutes());
 app.use(verifyJWT as any);
-app.use('/user-post', postRoutes());
+app.use('/user-post', postRoutes(io));
 app.use(errorHandler);
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");

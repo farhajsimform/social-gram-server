@@ -47,7 +47,7 @@ app.get("/", (_, res) => {
 app.use("/public", express_1.default.static(path_1.default.join(__dirname, '../public')));
 app.use('/auth', (0, auth_1.default)());
 app.use(verifyJWT_1.verifyJWT);
-app.use('/user-post', (0, post_1.default)());
+app.use('/user-post', (0, post_1.default)(io));
 app.use(errorHandler_1.errorHandler);
 mongoose_1.default.connection.once("open", () => {
     console.log("Connected to MongoDB");
