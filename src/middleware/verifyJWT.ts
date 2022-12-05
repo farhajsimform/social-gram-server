@@ -1,14 +1,6 @@
 import jwt from "jsonwebtoken";
-import { Request, Response, NextFunction } from "express";
-
-type TokenData = {
-  user: string;
-  roles: Array<string>;
-  id: string;
-};
-interface IRequest extends Request {
-  tokenData: TokenData;
-}
+import { Response, NextFunction } from "express";
+import { IRequest } from "../interfaces";
 
 export const verifyJWT = (req: IRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;

@@ -13,6 +13,7 @@ import { SocketConnection } from "./socket/socket";
 import { errorHandler } from "./middleware/errorHandler";
 import postRoutes from "./routes/post";
 import path from "path";
+import userRoutes from "./routes/user";
 const socketio  = require("socket.io");
 
 
@@ -55,6 +56,7 @@ app.use("/public", express.static(path.join(__dirname, '../public')));
 app.use('/auth', authRoutes());
 app.use(verifyJWT as any);
 app.use('/user-post', postRoutes(io));
+app.use('/user', userRoutes(io));
 app.use(errorHandler);
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");

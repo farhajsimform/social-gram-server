@@ -18,6 +18,7 @@ const socket_1 = require("./socket/socket");
 const errorHandler_1 = require("./middleware/errorHandler");
 const post_1 = __importDefault(require("./routes/post"));
 const path_1 = __importDefault(require("path"));
+const user_1 = __importDefault(require("./routes/user"));
 const socketio = require("socket.io");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -48,6 +49,7 @@ app.use("/public", express_1.default.static(path_1.default.join(__dirname, '../p
 app.use('/auth', (0, auth_1.default)());
 app.use(verifyJWT_1.verifyJWT);
 app.use('/user-post', (0, post_1.default)(io));
+app.use('/user', (0, user_1.default)(io));
 app.use(errorHandler_1.errorHandler);
 mongoose_1.default.connection.once("open", () => {
     console.log("Connected to MongoDB");

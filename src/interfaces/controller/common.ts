@@ -1,5 +1,5 @@
 import { Request } from "express";
-type TokenData = {
+export type TokenData = {
   user: string;
   roles: Array<string>;
   id: string;
