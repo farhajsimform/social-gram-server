@@ -10,11 +10,12 @@ export const SocketConnection = (io: any) => {
      * You can call join to subscribe the socket to a given channel
      */
     socket.on("join", (id: string) => {
+      console.log("channel id", id);
       socket.join(id);
     });
 
     // chat functionality
-    socket.on("HandleReciveChat", async ({ message, roomID, webtoken }) => {
+    socket.on("sendMessage", async ({ message, roomID, webtoken }) => {
       const checkVeify = await getIdFromToken(webtoken);
       if (checkVeify) {
         const { id } = checkVeify;
@@ -33,19 +34,19 @@ export const SocketConnection = (io: any) => {
           .findById(saved._id, {
             message: 1,
             _id: 1,
-            updatedAt: 1,
+            createdAt: 1,
             roomID: 1,
           })
           .populate({
             path: "sendby",
             select: {
-              username: 1,
-              _id: 1,
-              socialfields: 1,
+              fullname: 1,
+              email: 1,
+              picture: 1,
             },
           });
 
-        io.in(roomID).emit("GetMessages", getChatData);
+        io.in(roomID).emit("reciveMessage", getChatData);
       }
     });
 

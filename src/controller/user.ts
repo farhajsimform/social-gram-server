@@ -3,6 +3,7 @@ import userModel from "../modals/user";
 import { IRequest } from "../interfaces";
 import friendsModel from "../modals/friends";
 import mongoose from "mongoose";
+import chatModel from "../modals/chats";
 export const handleSendRequest = async (
   req: IRequest,
   res: Response,
@@ -301,6 +302,63 @@ export const handleDeclinedFriendRequest = async (
       }
     );
     res.status(200).json({ message: "Request rejected successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const handleFetchUsersForChat = async (req: IRequest, res: Response) => {
+  try {
+    const {
+      tokenData: { id: userid },
+      // query: { limit },
+    } = req;
+    const allFriends = await friendsModel
+      .find({ bothfriends: userid })
+      .populate({
+        path: "bothfriends",
+        select: {
+          fullname: 1,
+          picture: 1,
+          email: 1,
+        },
+        match: {
+          _id: {
+            $ne: new mongoose.Types.ObjectId(userid),
+          },
+        },
+      })
+      .populate({
+        path: "chats",
+        options: {
+          sort: {
+            _id: -1,
+          },
+          skipLimit: 1,
+        },
+      })
+      // .limit(Number(limit))
+      .lean();
+    res.status(200).json(allFriends);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const handleGetRoomChats = async (req: IRequest, res: Response) => {
+  try {
+    const {
+      params: { roomID },
+    } = req;
+    const allChats = await chatModel.find({ roomID }).populate({
+      path: "sendby",
+      select: {
+        fullname: 1,
+        email: 1,
+        picture: 1,
+      },
+    });
+    res.status(200).json(allChats);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

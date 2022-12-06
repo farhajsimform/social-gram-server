@@ -6,6 +6,8 @@ import {
   handleGetLoggedUserProfile,
   handleSearchProfiles,
   handleSendRequest,
+  handleFetchUsersForChat,
+  handleGetRoomChats
 } from "../controller/user";
 
 const router = express.Router();
@@ -25,6 +27,8 @@ const userRoutes = (io: any) => {
   );
   router.get("/search-profiles", handleSearchProfiles);
   router.get("/user-profile", handleGetLoggedUserProfile);
+  router.get("/users-for-chat", handleFetchUsersForChat);
+  router.get("/room-chat-data/:roomID", handleGetRoomChats);
   return router;
 };
 

@@ -69,7 +69,7 @@ export const handleLogin = async (req: Request, res: Response) => {
     });
 
     // Send authorization roles and access token to user
-    res.json({ roles, accessToken });
+    res.json({ roles, accessToken, userid: foundUser._id });
   } else {
     res.sendStatus(401);
   }
