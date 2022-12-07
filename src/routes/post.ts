@@ -1,4 +1,4 @@
-import { createPost, getAllPosts, handleReactions } from "../controller/post";
+import { createPost, getAllPosts, handleComment, handleReactions } from "../controller/post";
 import { resizeImages, uploadImages } from "../middleware/uploadImage";
 import { IRequest } from "../interfaces";
 import express, { Response } from "express";
@@ -14,7 +14,7 @@ const postRoutes = (io: any) => {
   );
   router.get("/post", getAllPosts);
   router.put("/reaction/:postId", handleReactions);
-  router.put("/add-comment/:postId", handleReactions);
+  router.put("/add-comment/:postId", (req: IRequest, res: Response) => handleComment(req, res, io));
   return router;
 };
 

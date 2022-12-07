@@ -34,6 +34,19 @@ export const createPost = async (req: IRequest, res: Response, io: any) => {
           fullname: 1,
         },
       })
+      .populate({
+        path: "comments",
+        select: { comment: 1, createdAt: 1, commentby: 1 },
+        populate: {
+          path: "commentby",
+          select: {
+            _id: 1,
+            fullname: 1,
+            picture: 1,
+            email: 1,
+          },
+        },
+      })
       .lean();
     io.emit("GetNewPosts", userPost);
     res.status(201).json(userPost);
@@ -58,6 +71,11 @@ export const getAllPosts = async (req: Request, res: Response) => {
       .populate({
         path: "comments",
         select: { comment: 1, createdAt: 1, commentby: 1 },
+        options: {
+          sort: {
+            _id: -1,
+          },
+        },
         populate: {
           path: "commentby",
           select: {
@@ -90,6 +108,7 @@ export const handleReactions = async (req: IRequest, res: Response) => {
     const findReactions = await postModel.findOne({
       $and: [{ _id: postId }, { [reactionType]: id }],
     });
+    let count = 0;
     if (findReactions) {
       updateQuery = {
         $pull: {
@@ -99,6 +118,7 @@ export const handleReactions = async (req: IRequest, res: Response) => {
           [reactionCountType]: -1,
         },
       };
+      count = -1;
     } else {
       updateQuery = {
         $push: {
@@ -108,15 +128,16 @@ export const handleReactions = async (req: IRequest, res: Response) => {
           [reactionCountType]: 1,
         },
       };
+      count = 1;
     }
     await postModel.updateOne({ _id: postId }, updateQuery);
-    res.status(200).json();
+    res.status(200).json({ count });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export const handleComment = async (req: IRequest, res: Response) => {
+export const handleComment = async (req: IRequest, res: Response, io: any) => {
   try {
     const {
       body: { comment },
@@ -125,7 +146,7 @@ export const handleComment = async (req: IRequest, res: Response) => {
     } = req;
     const createComment = await commentModel.create({
       comment,
-      commnetedby: userid,
+      commentby: userid,
     });
     await postModel.updateOne(
       { _id: postId },
@@ -135,22 +156,23 @@ export const handleComment = async (req: IRequest, res: Response) => {
         },
       }
     );
-    if (createComment) {
-      const getCommentData = await commentModel
-        .findById(
-          { _id: createComment._id },
-          { _id: 0, comment: 1, date: 1, commnetedby: 1 }
-        )
-        .populate({
-          path: "commnetedby",
-          select: {
-            _id: 0,
-            username: 1,
-            useravatar: 1,
-          },
-        });
-      res.status(200).json(getCommentData);
-    }
+    const getCommentData = await commentModel
+      .findById(
+        { _id: createComment._id },
+        { comment: 1, commentby: 1, createdAt: 1 }
+      )
+      .populate({
+        path: "commentby",
+        select: {
+          _id: 0,
+          fullname: 1,
+          picture: 1,
+          email: 1,
+        },
+      })
+      .lean();
+    io.emit("GetNewComments", { comments: getCommentData, postid: postId });
+    res.status(201).json(getCommentData);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
