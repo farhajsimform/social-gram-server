@@ -29,7 +29,8 @@ export interface IUser {
   receivedRequests: Array<Types.ObjectId>;
   friends: Array<Types.ObjectId>;
   posts: Array<Types.ObjectId>;
-  roles: IRoles
+  roles: IRoles;
+  online: boolean;
 }
 
 export default IUser;

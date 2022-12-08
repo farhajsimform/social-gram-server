@@ -78,6 +78,10 @@ const userSchema = new mongoose.Schema<IUser>(
         ref: "posts",
       },
     ],
+    online: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
