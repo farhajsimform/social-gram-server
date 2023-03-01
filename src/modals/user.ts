@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     tokens: [String],
     fullname: { type: String },
+    username: { type: String },
     gender: { type: String },
     geolocation: { type: String },
     website: { type: String },

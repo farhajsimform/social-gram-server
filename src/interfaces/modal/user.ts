@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
 export interface IRoles {
-    User: number;
-    Editor: number;
-    Admin: number;
-  }
+  User: number;
+  Editor: number;
+  Admin: number;
+}
 
 export interface IUser {
   email: string;
@@ -31,6 +31,7 @@ export interface IUser {
   posts: Array<Types.ObjectId>;
   roles: IRoles;
   online: boolean;
+  username: string;
 }
 
 export default IUser;

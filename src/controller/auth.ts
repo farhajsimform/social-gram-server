@@ -23,7 +23,7 @@ export const handleLogin = async (req: Request, res: Response) => {
         UserInfo: {
           email: foundUser.email,
           roles: roles,
-          id: foundUser._id
+          id: foundUser._id,
         },
       },
       String(process.env.ACCESS_TOKEN_SECRET),
@@ -76,11 +76,11 @@ export const handleLogin = async (req: Request, res: Response) => {
 };
 
 export const handleNewUser = async (req: Request, res: Response) => {
-  const { email, pwd, fullname } = req.body;
+  const { email, pwd, username } = req.body;
   if (!email || !pwd)
     return res
       .status(400)
-      .json({ message: "Username and password are required." });
+      .json({ message: "Email and password are required." });
 
   // check for duplicate usernames in the db
   const duplicate = await userModel.findOne({ email }).lean();
@@ -91,10 +91,10 @@ export const handleNewUser = async (req: Request, res: Response) => {
     const hashedPwd = await bcrypt.hash(pwd, 10);
 
     //create and store the new user
-   await userModel.create({
+    await userModel.create({
       email: email,
       password: hashedPwd,
-      fullname
+      username,
     });
 
     res.status(201).json({ success: `New user ${email} created!` });

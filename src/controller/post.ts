@@ -29,9 +29,8 @@ export const createPost = async (req: IRequest, res: Response, io: any) => {
       .populate({
         path: "postedby",
         select: {
-          email: 1,
           picture: 1,
-          fullname: 1,
+          username: 1,
         },
       })
       .populate({
@@ -41,9 +40,8 @@ export const createPost = async (req: IRequest, res: Response, io: any) => {
           path: "commentby",
           select: {
             _id: 1,
-            fullname: 1,
             picture: 1,
-            email: 1,
+            username: 1,
           },
         },
       })
@@ -63,9 +61,8 @@ export const getAllPosts = async (req: Request, res: Response) => {
       .populate({
         path: "postedby",
         select: {
-          email: 1,
           picture: 1,
-          fullname: 1,
+          username: 1,
         },
       })
       .populate({
@@ -80,9 +77,8 @@ export const getAllPosts = async (req: Request, res: Response) => {
           path: "commentby",
           select: {
             _id: 1,
-            fullname: 1,
             picture: 1,
-            email: 1,
+            username: 1,
           },
         },
       })
@@ -165,9 +161,8 @@ export const handleComment = async (req: IRequest, res: Response, io: any) => {
         path: "commentby",
         select: {
           _id: 0,
-          fullname: 1,
+          username: 1,
           picture: 1,
-          email: 1,
         },
       })
       .lean();

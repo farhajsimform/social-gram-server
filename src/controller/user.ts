@@ -175,9 +175,8 @@ export const handleSearchProfiles = async (req: IRequest, res: Response) => {
           ],
         },
         {
-          fullname: 1,
+          username: 1,
           picture: 1,
-          email: 1,
         }
       )
       .limit(Number(limit) || 50)
@@ -234,9 +233,8 @@ export const handleGetLoggedUserProfile = async (
       .populate({
         path: "sentRequests receivedRequests",
         select: {
-          fullname: 1,
+          username: 1,
           picture: 1,
-          email: 1,
         },
       })
       .populate({
@@ -253,9 +251,8 @@ export const handleGetLoggedUserProfile = async (
         populate: {
           path: "bothfriends",
           select: {
-            fullname: 1,
+            username: 1,
             picture: 1,
-            email: 1,
           },
           match: {
             _id: {
@@ -318,9 +315,8 @@ export const handleFetchUsersForChat = async (req: IRequest, res: Response) => {
       .populate({
         path: "bothfriends",
         select: {
-          fullname: 1,
           picture: 1,
-          email: 1,
+          username: 1,
         },
         match: {
           _id: {
@@ -353,8 +349,7 @@ export const handleGetRoomChats = async (req: IRequest, res: Response) => {
     const allChats = await chatModel.find({ roomID }).populate({
       path: "sendby",
       select: {
-        fullname: 1,
-        email: 1,
+        username: 1,
         picture: 1,
       },
     });
