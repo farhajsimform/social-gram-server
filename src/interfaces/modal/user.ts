@@ -1,11 +1,11 @@
-import { Types } from "mongoose";
+import { Types, Document } from "mongoose";
 export interface IRoles {
   User: number;
   Editor: number;
   Admin: number;
 }
 
-export interface IUser {
+export interface IUser extends Document {
   email: string;
   password: string;
   passwordResetToken: string;

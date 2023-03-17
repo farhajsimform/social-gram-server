@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import { IUser } from "../interfaces";
 import { regexForEmail } from "../constant";
 
+
+
 const userSchema = new mongoose.Schema<IUser>(
   {
     email: {
